@@ -1,0 +1,41 @@
+{
+  "jobList": {
+    "1": { "time": 5, "jobSize": 5760 },
+    "2": { "time": 4, "jobSize": 4190 },
+    "3": { "time": 8, "jobSize": 3290 },
+    "4": { "time": 2, "jobSize": 2030 },
+    "5": { "time": 2, "jobSize": 2550 },
+    "6": { "time": 6, "jobSize": 6990 },
+    "7": { "time": 8, "jobSize": 8940 },
+    "8": { "time": 10, "jobSize": 740 },
+    "9": { "time": 7, "jobSize": 3930 },
+    "10": { "time": 6, "jobSize": 6890 },
+    "11": { "time": 5, "jobSize": 6580 },
+    "12": { "time": 8, "jobSize": 3820 },
+    "13": { "time": 9, "jobSize": 9140 },
+    "14": { "time": 10, "jobSize": 420 },
+    "15": { "time": 10, "jobSize": 220 },
+    "16": { "time": 7, "jobSize": 7540 },
+    "17": { "time": 3, "jobSize": 3210 },
+    "18": { "time": 1, "jobSize": 1380 },
+    "19": { "time": 9, "jobSize": 9850 },
+    "20": { "time": 3, "jobSize": 3610 },
+    "21": { "time": 7, "jobSize": 7540 },
+    "22": { "time": 2, "jobSize": 2710 },
+    "23": { "time": 8, "jobSize": 8390 },
+    "24": { "time": 5, "jobSize": 5950 },
+    "25": { "time": 10, "jobSize": 760 }
+  },
+  "memoryList": {
+    "1": { "size": 9500 },
+    "2": { "size": 7000 },
+    "3": { "size": 4500 },
+    "4": { "size": 8500 },
+    "5": { "size": 3000 },
+    "6": { "size": 9000 },
+    "7": { "size": 1000 },
+    "8": { "size": 5500 },
+    "9": { "size": 1500 },
+    "10": { "size": 500 }
+  }
+}
