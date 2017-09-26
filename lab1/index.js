@@ -21,78 +21,105 @@
 
     this.memoryBlocks = []; //Where we keep track of our memory blocks
     this.jobsList = []; //List of jobs
-    this.queue = []; //Queue for jobs
-    this.quickLookup = {}; //For each job id, points to which queue object it is associated with
+    var timer = null;
 
     //This function starts the memory manager and begins/manages the job processing
     this.start = function() {
       this.memoryBlocks = DATA.memoryList;
       this.jobsList = DATA.jobList;
-      this.queueJobs(); //queue the jobs to the proper memory blocks
-      this.startProcessing(); //start processing the jobs in the memory blocks
+      this.queueJobs(); //queue the jobs to the proper memory blocks (initially)
 
-      this.currentStatusOutput();
+      timer = setInterval(function() {
+        self.processing(); //start processing the jobs in the memory blocks and manage them
+      }, 1000);
     }
 
     //Goes through the job queue and starts each job in each memory block
-    this.startProcessing = function() {
+    this.processing = function() {
+      var jobIds = Object.keys(this.jobsList);
+      //Go through each job (if running, increment completion time)
+      for (var i = 0; i < jobIds.length; i++) {
+        var job = this.jobsList[jobIds[i]];
+        if (job.status == "r") {
+          this.jobsList[jobIds[i]].completionTime++;
+          if (job.completionTime >= job.time) {
+            console.log("JOB IS DONE");
+            //JOB IS DONE
+            //Tell the memory block to empty itself
+            this.memoryBlocks[job.memoryBlock].status = "e";
+            delete this.jobsList[jobIds[i]]["memoryBlock"];
 
+            //Set the job as finished
+            this.jobsList[jobIds[i]].status = "d";
+            //Tally up the final completion time by adding in the wait time to it
+            this.jobsList[jobIds[i]].completionTime += this.jobsList[jobIds[i]].waitTime;
+
+            //Now its time to queue another job
+            this.queueJobs();
+          }
+        } else if (job.status == "w") {
+          this.jobsList[jobIds[i]].waitTime++;
+        }
+      }
+      this.currentStatusOutput();
     };
 
     //This function queues up the jobs in a data structure that points to the best fitting memory block
+    // This only happens initially. The processing function handles the rest
     this.queueJobs = function() {
-      //first, populate the queue object with the memory properties
-      this.initQueue();
-      this.sortQueueByMemorySize(); //This will make allocating jobs to a memory block much easier
-
-      //Now, going through the list of jobs. Allocate the best memory block to use for each job and queue them up for that memory block (This is under the assumption that we don't pick another block if one is busy)
-      // Please note: The queue is sorted from smallest to largest memory block. So it can find the best fit easiest.
-      var jobNumbers = Object.keys(this.jobsList);
-      for (var i = 0; i < jobNumbers.length; i++) {
-        var jobSize = this.jobsList[jobNumbers[i]].jobSize; //size of the job
-
-        var foundSpot = false;
-        for (var k = 0; k < this.queue.length; k++) {
-          if (this.queue[k].size >= jobSize) {
-            //Use this memory block. It fits best.
-            this.queue[k].jobsQueued.push({ jobNum: jobNumbers[i], "jobSize": jobSize, "runTime": this.jobsList[jobNumbers[i]].time, "jobStatus": 'new', waitTime: 0, completionTime: 0 });
-            this.quickLookup[jobNumbers[i]] = { queueIndex: k, jobsQueuedIndex: this.queue[k].jobsQueued.length - 1 };
-            foundSpot = true;
-            break;
+      var keys = Object.keys(this.jobsList);
+      for (var i = 0; i < keys.length; i++) {
+        var job = this.jobsList[keys[i]];
+        if (job.status != "d") {
+          var memoryBlockReady = this.findBestFit(job);
+          if (memoryBlockReady != null && memoryBlockReady != -1) {
+            //Okay, start the job now
+            console.log("STARTING THE JOB IN:", memoryBlockReady);
+            this.memoryBlocks[memoryBlockReady].status = "f"; //full
+            this.jobsList[keys[i]].status = "r"; //running
+            this.jobsList[keys[i]].memoryBlock = memoryBlockReady;
+          } else if (memoryBlockReady == -1) {
+            //job is just waiting
+            this.jobsList[keys[i]].status = "w"; //waiting
           } else {
-            continue; //next
+            //Memory block is busy
           }
         }
-
-        if (!foundSpot) {
-          console.log("WARNING - UNALLOCATED JOB NUMBER: ", jobNumbers[i]);
-        }
-
-        //remove the job from the list, its been assigned
-        jobNumbers.shift();
-        i--;
-      }
+      };
     };
 
-    //Sort the queue to be organized by memory size. Smallest to largest. Makes it easier to allocate jobs to the appropriate memory block
-    this.sortQueueByMemorySize = function() {
-      this.queue.sort(function(a, b) {
-        if (a.size > b.size) {
-          return 1;
-        } else if (a.size < b.size) {
-          return -1;
+    this.findBestFit = function(job) {
+      var incorrectSize = false;
+      var bestFitMemoryBlockNum = null;
+      //Go through the memory blocks, and find the best fitting memory block (if all are busy. the job is considered waiting)
+      for (var i = 0; i < Object.keys(this.memoryBlocks).length; i++) {
+        incorrectSize = false; //reset
+        var block = this.memoryBlocks[Object.keys(this.memoryBlocks)[i]];
+        if (block.status == 'e' && block.size <= job.size) {
+          //The memory block is empty and fits snugly specify it as the current best fit
+          if (!bestFitMemoryBlockNum) {
+            bestFitMemoryBlockNum = Object.keys(this.memoryBlocks)[i];
+            continue;
+          } else {
+            //We already have a best fit. Compare the two, is one more 'snug' then the other?
+            if (block.size < this.memoryBlocks[bestFitMemoryBlockNum].size) {
+              //we found our new snugly fitting memory block
+              bestFitMemoryBlockNum = Object.keys(this.memoryBlocks)[i];
+            } else {
+              continue; //Next loop
+            }
+          }
         } else {
-          return 0;
+          //Check if block is empty and size was wrong fit
+          if (block.status == "e" && block.size > job.size) {
+            incorrectSize = true;
+          }
         }
-      });
-    };
-
-    //Sets up the jobs queue for each memory block based on their associated size.
-    this.initQueue = function() {
-      var memoryBlockNumbers = Object.keys(this.memoryBlocks);
-      for (var i = 0; i < memoryBlockNumbers.length; i++) {
-        var blockNum = memoryBlockNumbers[i];
-        this.queue.push({ "blockNum": blockNum, "size": this.memoryBlocks[blockNum].size, jobsQueued: [] });
+      }
+      if (incorrectSize) {
+        return -1; //meaning the job is waiting
+      } else {
+        return bestFitMemoryBlockNum;
       }
     };
 
@@ -100,15 +127,12 @@
     this.currentStatusOutput = function() {
       process.stdout.write('\033c');
       console.log("Job Number", "Run Time", "Job Size", "Job Status", "Wait Time", "Completion Time");
-      // var keys = Object.keys(this.quickLookup);
-      // for (var i = 0; i < keys.length; i++) {
-      //   var jobNum = keys[i];
-      //   var queueIndex = this.quickLookup[jobNum].queueIndex;
-      //   var jobsQueueIndex = this.quickLookup[jobNum].jobsQueuedIndex;
-      //   console.table(this.queue[queueIndex].jobsQueued[jobsQueueIndex]);
-      // }
-      console.table
-      //todo
+      var keys = Object.keys(this.jobsList);
+      for (var i = 0; i < keys.length; i++) {
+        var jobNum = keys[i];
+        var job = this.jobsList[jobNum];
+        console.log(jobNum, job.time, job.size, job.status, job.waitTime, job.completionTime);
+      }
     }
   };
 
