@@ -43,7 +43,7 @@
         if (job.status == "r") {
           this.jobsList[jobIds[i]].completionTime++;
           if (job.completionTime >= job.time) {
-            console.log("JOB IS DONE");
+            // console.log("JOB IS DONE");
             //JOB IS DONE
             //Tell the memory block to empty itself
             this.memoryBlocks[job.memoryBlock].status = "e";
@@ -74,12 +74,13 @@
           var memoryBlockReady = this.findBestFit(job);
           if (memoryBlockReady != null && memoryBlockReady != -1) {
             //Okay, start the job now
-            console.log("STARTING THE JOB IN:", memoryBlockReady);
+            // console.log("STARTING THE JOB", keys[i], "IN:", memoryBlockReady);
             this.memoryBlocks[memoryBlockReady].status = "f"; //full
             this.jobsList[keys[i]].status = "r"; //running
             this.jobsList[keys[i]].memoryBlock = memoryBlockReady;
           } else if (memoryBlockReady == -1) {
             //job is just waiting
+            // console.log("JOB IS WAITING")
             this.jobsList[keys[i]].status = "w"; //waiting
           } else {
             //Memory block is busy
@@ -89,6 +90,8 @@
     };
 
     this.findBestFit = function(job) {
+      //console.log("Searching for memory block for job", job);
+
       var incorrectSize = false;
       var bestFitMemoryBlockNum = null;
       //Go through the memory blocks, and find the best fitting memory block (if all are busy. the job is considered waiting)
@@ -117,7 +120,8 @@
         }
       }
       if (incorrectSize) {
-        return -1; //meaning the job is waiting
+        console.log("block was empty, size was too big")
+        return -1; //meaning the next job is waiting
       } else {
         return bestFitMemoryBlockNum;
       }
@@ -126,9 +130,16 @@
     //This function outputs the current status of the jobs
     this.currentStatusOutput = function() {
       process.stdout.write('\033c');
-      console.log("Job Number", "Run Time", "Job Size", "Job Status", "Wait Time", "Completion Time");
-      var keys = Object.keys(this.jobsList);
+      console.log("MEMORY: id, size, status");
+      var keys = Object.keys(this.memoryBlocks);
       for (var i = 0; i < keys.length; i++) {
+        var memory = this.memoryBlocks[keys[i]];
+        console.log(Object.keys(this.memoryBlocks)[i], memory.size, memory.status);
+      }
+
+      console.log("jobNumber, runTime, size, jobStatus, waitTime, completionTime");
+      var keys = Object.keys(this.jobsList);
+      for (i = 0; i < keys.length; i++) {
         var jobNum = keys[i];
         var job = this.jobsList[jobNum];
         console.log(jobNum, job.time, job.size, job.status, job.waitTime, job.completionTime);
