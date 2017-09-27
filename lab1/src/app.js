@@ -16,7 +16,7 @@
 
   const DATA = require('./data.json'); //Data for the job simulation
 
-  //Memory block flags
+  //Memory block check flags for bestFit function
   const BUSY_FLAG = -1;
   const FAILED_FLAG = -2;
 

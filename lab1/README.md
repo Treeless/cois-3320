@@ -8,5 +8,8 @@
 * `gulp unit`
 
 #OUTPUT EXAMPLE
-![in progress output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_inprogress.PNG?raw=true "Output during runtime")
-![final output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_final.PNG?raw=true "Output on completion")
+
+<h2>Output during runtime</h2>
+<span style="display:block;text-align:center">![in progress output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_inprogress.PNG?raw=true "Output during runtime")</span>
+<h2>Output after full completion</h2>
+<span style="display:block;text-align:center">![final output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_final.PNG?raw=true "Output on completion")</span>
