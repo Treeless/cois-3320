@@ -1,11 +1,29 @@
 (function() {
-  const App = require('../app.js');
+  const App = require('../src/app.js');
   let app;
+
+  var assert = require('chai').assert;
 
   describe('Lab1App', function() {
     //Before each text, reset the app instance
     beforeEach(function() {
       app = new App();
+    });
+
+    afterEach(function() {
+      //reset the memory blocks
+      var keys = Object.keys(app.memoryBlocks);
+      for (var i = 0; i < keys.length; i++) {
+        app.memoryBlocks[keys[i]].status = "empty";
+      }
+
+      //Reset the jobs
+      var jobs = Object.keys(app.jobsList);
+      for (var i = 0; i < jobs.length; i++) {
+        app.jobsList[jobs[i]].status = "new";
+        if (app.jobsList[jobs[i]].memoryBlock)
+          delete app.jobsList[jobs[i]]['memoryBlock']
+      }
     });
 
     //Method testings
@@ -30,20 +48,37 @@
         memBlock.should.equal('10');
       });
 
-      it("return -1 if the job has no free memory block to use", function() {
+      it("return null if all memory blocks are full", function() {
+        var keys = Object.keys(app.memoryBlocks);
+        for (var i = 0; i < keys.length; i++) {
+          app.memoryBlocks[keys[i]].status = "full"; //optimal memory block is busy
+        }
 
+        var memBlock = app.findBestFit(app.jobsList['14']);
+        assert.equal(memBlock, null);
       });
 
-      it.skip('return null if all memory blocks are full', function() {});
-      it.skip('return the snuggest memory block for the job', function() {});
+      it('picks the next best fit, if there is an open memory block', function() {
+        app.memoryBlocks["10"].status = "full";
+        var memBlock = app.findBestFit(app.jobsList['14']);
+        memBlock.should.equal('7');
+      });
     });
 
     describe('#queueJob', function() {
       it('given a job, add it to a memory block to be processed', function() {
         app.queueJob("1", app.jobsList["1"]).should.equal(true);
       });
-      it.skip('given a waiting job, add it to a memory block to be processed', function() {});
-      it.skip('given an already finished job, dont add it to a memory block', function() {});
+
+      it('given a waiting job, add it to a memory block to be processed', function() {
+        app.jobsList["1"].status = "waiting";
+        app.queueJob("1", app.jobsList["1"]).should.equal(true);
+      });
+
+      it('given an already finished job, dont add it to a memory block', function() {
+        app.jobsList["1"].status = "done";
+        app.queueJob("1", app.jobsList["1"]).should.equal(false);
+      });
     });
   });
 }());
