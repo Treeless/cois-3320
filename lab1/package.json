@@ -1,0 +1,28 @@
+{
+  "name": "os-f-lab1",
+  "version": "1.0.0",
+  "description": "Lab1 for Operating Systems Fundamentals - COIS-3320H - TrentU",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/treeless/cois-3320"
+  },
+  "author": "Matthew Rowlandson",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-spawn-mocha": "^3.1.0",
+    "gulp-util": "^3.0.7",
+    "mocha": "^3.1.2",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0"
+  }
+}

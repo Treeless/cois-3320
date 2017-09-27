@@ -1,0 +1,1 @@
+To run this: First make sure you have Node 8.4.* installed and then type `npm install` in the project folder to install dependencies and then type `node index.js`
