@@ -21,11 +21,11 @@
   const FAILED_FLAG = -2;
 
   //Memory block statuses
-  const MEMBLOCK_EMPTY = "empty"; //if you change this, change in data.json
+  const MEMBLOCK_EMPTY = "empty";
   const MEMBLOCK_FULL = "full";
 
   //Job statuses
-  const NEW_JOB = "new"; //if you change this, change in data.json
+  const NEW_JOB = "new";
   const FAILED_JOB = "failed";
   const DONE_JOB = "done";
   const WAITING_JOB = "waiting";
@@ -84,24 +84,24 @@
           this.queueJob(jobIds[i], this.jobsList[jobIds[i]]);
         }
       }
+
+      //Output the status of the application
       this.currentStatusOutput();
     };
 
-    //Queues the given individual job if possible
+    //Queues the given individual job if possible, returns if the job was queued or not
     this.queueJob = function(jobId, job) {
       var queued = false;
       if (job.status == NEW_JOB || job.status == WAITING_JOB) {
         var memoryBlockReady = this.findBestFit(job);
         if (memoryBlockReady != null && memoryBlockReady > 0) {
           //Okay, start the job now
-          // console.log("STARTING THE JOB", keys[i], "IN:", memoryBlockReady);
           this.memoryBlocks[memoryBlockReady].status = MEMBLOCK_FULL; //full
           this.jobsList[jobId].status = RUNNING_JOB; //running
           this.jobsList[jobId].memoryBlock = memoryBlockReady;
           queued = true;
         } else if (memoryBlockReady == BUSY_FLAG) {
           //job is just waiting
-          // console.log("JOB IS WAITING")
           this.jobsList[jobId].status = WAITING_JOB; //waiting
           queued = false;
         } else if (memoryBlockReady == FAILED_FLAG) {
@@ -117,7 +117,7 @@
       return queued;
     };
 
-    //This function queues up the jobs in a data structure that points to the best fitting memory block
+    //This function queues up the jobs in a data structure that points to the best fitting memory block (used mostly initally)
     this.queueJobs = function() {
       var keys = Object.keys(this.jobsList);
       for (var i = 0; i < keys.length; i++) {
@@ -126,6 +126,7 @@
       };
     };
 
+    //This function finds the best fitting memory block for the job based on size. If a memory block is busy and is the best fit. The function gives anotheer memory block that is the best fitting but free.
     this.findBestFit = function(job) {
       var maxSize = null; //used to check the largest memory block was have
       var incorrectSize = false;
@@ -179,7 +180,7 @@
 
     //This function outputs the current status of the jobs
     this.currentStatusOutput = function() {
-      process.stdout.write('\033c');
+      process.stdout.write('\033c'); //clear standard output
       console.log("MEMORY: id, size, status");
       var keys = Object.keys(this.memoryBlocks);
       for (var i = 0; i < keys.length; i++) {

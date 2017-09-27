@@ -6,8 +6,3 @@
 #Testing:
 
 * `gulp unit`
-
-#Building
-
-* `npm install nexe -g`
-* `nexe index.js -r app.js -o /build/app.js` --build
