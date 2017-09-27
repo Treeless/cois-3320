@@ -10,6 +10,9 @@
 #OUTPUT EXAMPLE
 
 <h2>Output during runtime</h2>
+
 ![in progress output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_inprogress.PNG?raw=true "Output during runtime")
+
 <h2>Output after full completion</h2>
+
 ![final output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_final.PNG?raw=true "Output on completion")
