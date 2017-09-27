@@ -6,3 +6,7 @@
 #Testing:
 
 * `gulp unit`
+
+#OUTPUT EXAMPLE
+![in progress output](/output/output_inprogress.PNG?raw=true "Output during runtime")
+![final output](/output/output_final.PNG?raw=true "Output on completion")
