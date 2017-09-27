@@ -1,13 +1,10 @@
-#instructions:
+<h1>LAB 1 - Operating Systems Fundamentals - COIS-3320H - TrentU - Matthew Rowlandson</h1>
+<h2>Instructions</h2>
 
-* First make sure you have Node 8.4.* installed and then type `npm install` in the project folder to install dependencies
+First make sure you have Node 8.4.* installed and then
+* type `npm install` in the project folder to install dependencies
 * Then type `node index.js` to run the application
-
-#Testing:
-
-* `gulp unit`
-
-#OUTPUT EXAMPLE
+* Testing? Run `gulp unit`
 
 <h2>Output during runtime</h2>
 
