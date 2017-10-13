@@ -6,6 +6,14 @@ First make sure you have Node 8.4.* installed and then
 * Then type `node index.js` to run the application
 * Testing? Run `gulp unit`
 
+<h2>Notes</h2>
+
+* the application code is located: `/src/app.js`
+* index.js just starts the application
+* The application uses a timer and processes each 'job' for its specified runtime based on timer iterations
+* Jobs can have multiple states: 'new', 'waiting', 'failed', 'done'
+* Memory Blocks can have two states: 'full', 'empty'
+
 <h2>Output during runtime</h2>
 
 ![in progress output](https://raw.github.com/Treeless/cois-3320/master/lab1/output/output_inprogress.PNG?raw=true "Output during runtime")
