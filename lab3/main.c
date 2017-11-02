@@ -67,6 +67,7 @@ int main(){
 
     //process the current job.
     jobs[jobPosition].cpuCycles--;
+    cpuCycleCount++; //number of cpu cycles completed 
 
     //is the job done?
     if(jobs[jobPosition].cpuCycles == 0) {
@@ -86,8 +87,6 @@ int main(){
       jobsDone++;
       jobPosition = -1; //The job is complete
     }
-
-    cpuCycleCount++; //number of cpu cycles completed 
   }
 
   //Calculate avgWait and avgTurnaround
