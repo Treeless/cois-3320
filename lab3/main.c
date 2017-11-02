@@ -1,4 +1,10 @@
-// Shortest Job Next
+/*
+  Author: Matthew Rowlandson
+  Name: Shortest JOb Next Lab - Operating Systems Fundamentals
+  DEscription: Simulation for running jobs using the shortest job next algorithm.
+  Language: C
+*/
+
 #include <stdio.h>
 
 const int NUMBER_OF_J = 10; //Number of jobs
@@ -12,11 +18,11 @@ typedef struct Job {
   int cpuCycles; //burst count
   int finishTime;
   int done;
-}
+}Job;
 
-const char names = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
-const int arrivalTimes = {0, 3, 5, 9, 10, 12, 14, 16, 17, 19};
-const int cpuCycles = {16, 2, 11, 6, 1, 9, 4, 14, 1, 8};
+const char names[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+const int arrivalTimes[] = {0, 3, 5, 9, 10, 12, 14, 16, 17, 19};
+const int cpuCycles[] = {16, 2, 11, 6, 1, 9, 4, 14, 1, 8};
 
 int main(){
   //VARS
@@ -39,11 +45,11 @@ int main(){
   int jobPosition = -1; //nothing
   int jobsDone = 0;
 
-  //Each iteration cycle
+  //Each iteration cycle is a cpu cycle
   while(jobsDone < NUMBER_OF_J){
-    int smallestBurst = 5115;
     //If no job running
     if(jobPosition == -1){
+      int smallestBurst = 5115; //big number to specify the smallestBurst
       //Has a job arrived?
       for(int j = 0; j < NUMBER_OF_J; j++){
         Job job = jobs[j];
@@ -60,22 +66,22 @@ int main(){
     }
 
     //process the current job.
-    job[jobPosition].cpuCycles--;
+    jobs[jobPosition].cpuCycles--;
 
     //is the job done?
-    if(job[jobPosition].cpuCycles == 0) {
-      job[jobPosition].done = 1; 
+    if(jobs[jobPosition].cpuCycles == 0) {
+      jobs[jobPosition].done = 1; 
 
-      job[jobPosition].finishTime = cpuCyclesCount;
-      job[jobPosition].turnaroundTime = cpuCyclesCount - job[jobPosition].arrivalTime;
-      job[jobPosition].waitingTime =   job[jobPosition].turnaroundTime - cpuCycles[jobPosition];
+      jobs[jobPosition].finishTime = cpuCyclesCount;
+      jobs[jobPosition].turnaroundTime = cpuCyclesCount - jobs[jobPosition].arrivalTime;
+      jobs[jobPosition].waitingTime = jobs[jobPosition].turnaroundTime - cpuCycles[jobPosition];
 
       //Add to total wait and total turn
-      totalWait += job[jobPosition].waitingTime;
-      totalTurnaround += job[jobPosition].turnaroundTime;
+      totalWait += jobs[jobPosition].waitingTime;
+      totalTurnaround += jobs[jobPosition].turnaroundTime;
 
 
-      jobFinishOrder[jobsDone] = job[jobPosition].name;
+      jobFinishOrder[jobsDone] = jobs[jobPosition].name;
 
       jobsDone++;
       jobPosition = -1; //The job is complete
