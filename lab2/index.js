@@ -94,7 +94,7 @@
       if (!hit) {
         pageFault++;
 
-        //whhen memory is kinda full
+        //when memory is kinda full
         if (memory.length == PAGE_FRAMES_COUNT) {
           //Memory is full, use the spot with the least frequency
           var leastFrequentlyUsed = 456; //abritray large number
