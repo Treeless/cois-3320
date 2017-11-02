@@ -72,8 +72,8 @@ int main(){
     if(jobs[jobPosition].cpuCycles == 0) {
       jobs[jobPosition].done = 1; 
 
-      jobs[jobPosition].finishTime = cpuCyclesCount;
-      jobs[jobPosition].turnaroundTime = cpuCyclesCount - jobs[jobPosition].arrivalTime;
+      jobs[jobPosition].finishTime = cpuCycleCount;
+      jobs[jobPosition].turnaroundTime = cpuCycleCount - jobs[jobPosition].arrivalTime;
       jobs[jobPosition].waitingTime = jobs[jobPosition].turnaroundTime - cpuCycles[jobPosition];
 
       //Add to total wait and total turn
@@ -92,15 +92,15 @@ int main(){
 
   //Calculate avgWait and avgTurnaround
   avgWaitingTime = (float)totalWait/NUMBER_OF_J;
-  avgTurnaround = (float)totalTurnaround/NUMBER_OF_J;
+  avgTurnaroundTime = (float)totalTurnaround/NUMBER_OF_J;
 
-  printf("Job Name\tArrival Time\tBurst Time\tWait Time\tTurn Around Time\n")
-  printf("-----------------------------------------\n")
+  printf("Job Name\tArrival Time\tBurst Time\tWait Time\tTurn Around Time\n");
+  printf("-----------------------------------------\n");
   //print out jobs
   for(int k =0; k < NUMBER_OF_J; k++){
     printf("%c\t\t%d\t\t%d\t\t%d\t\t%d\n", jobs[k].name, jobs[k].arrivalTime, cpuCycles[k], jobs[k].waitingTime, jobs[k].turnaroundTime);
   } 
-   printf("-----------------------------------------\n")
+   printf("-----------------------------------------\n");
 
   //print out stats
   printf("AverageWaitingTime: %.2f", avgWaitingTime);
